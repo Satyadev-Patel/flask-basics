@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% block title %} HOMEPAGE {% endblock %}
 {% block Content %}
+
+<h1>DATABASE RESULTS!!</h1>
+{% for i in results %}
+<h2>ID: {{i['id']}}  NAME: {{i['name']}}  LOCATION: {{i['location']}}</h2>
+{% endfor %}
 <h1>Hello {{name}}, You are at the home page</h1>
 
 {% if display %}

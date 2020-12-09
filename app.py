@@ -32,7 +32,10 @@ def index():
 @app.route('/home/<name>',methods = ['POST','GET'])
 def home(name):
     session['name'] = name
-    return render_template('home.html',name = name,display = False,mylist = ['one','two','three','four'])
+    db = get_db()
+    curs = db.execute('select id,name,location from users')
+    results = curs.fetchall()
+    return render_template('home.html',name = name,display = False,mylist = ['one','two','three','four'],results = results)
 
 
 @app.route('/render')
@@ -62,7 +65,11 @@ def theform():
         return render_template('form.html')
     else:
         name = request.form['name']
-       # loc = request.form['location']
+        loc = request.form['location']
+        
+        db = get_db()
+        db.execute('insert into users (name,location) values (?,?)',[name,loc])
+        db.commit()
         return redirect(url_for('home',name = name))
 
 
@@ -82,7 +89,7 @@ def viewresults():
     db = get_db()
     curs = db.execute('select id,name,location from users')
     results = curs.fetchall()
-    return 'The id is {}, name is {}, location is {}'.format(results[0]['id'],results[0]['name'],results[0]['location'])
+    return 'The id is {}, name is {}, location is {}'.format(results[1]['id'],results[1]['name'],results[1]['location'])
 
 
 if __name__ == '__main__':
